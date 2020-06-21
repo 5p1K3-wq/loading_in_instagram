@@ -31,3 +31,6 @@ python3 main.py -u username -p password -proxy https://localhost:8080
 [Pillow 7.1.2](https://pypi.org/project/Pillow/) - Image Library
 
 [instabot 0.117.0](https://pypi.org/project/instabot/) - Free Instagram python bot
+
+[argparse 1.4.0](https://pypi.org/project/argparse/) - The argparse module makes it easy to write user friendly command 
+line interfaces.
