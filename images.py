@@ -2,8 +2,8 @@ import requests
 from pathlib import Path
 
 
-def get_file_extension(link_file):
-    return link_file.split('.')[-1]
+def get_file_extension(image_url):
+    return image_url.split('.')[-1]
 
 
 def get_directory_images():
@@ -13,13 +13,13 @@ def get_directory_images():
     return image_dir
 
 
-def save_images_in_directory(images, file_name):
+def save_images_in_directory(image_urls, file_name):
     current_dir_img = get_directory_images()
-    for image_number, image in enumerate(images):
-        extension_file = get_file_extension(image)
+    for image_number, image_url in enumerate(image_urls):
+        extension_file = get_file_extension(image_url)
         name = f'{file_name}_{image_number}.{extension_file}'
         path_where_to_save = current_dir_img / name
-        download_image(image, path_where_to_save)
+        download_image(image_url, path_where_to_save)
 
 
 def download_image(url, path_where_to_save):
