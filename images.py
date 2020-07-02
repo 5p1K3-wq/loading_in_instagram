@@ -3,12 +3,12 @@ from pathlib import Path
 
 
 def get_file_extension(image_url):
-    return image_url.split('.')[-1]
+    #return image_url.split('.')[-1]
+    return Path(image_url).suffix
 
 
 def get_directory_images():
-    current_dir = Path.cwd()
-    image_dir = Path(current_dir, 'images')
+    image_dir = Path.cwd().joinpath('images')
     image_dir.mkdir(exist_ok=True)
     return image_dir
 
@@ -18,7 +18,7 @@ def save_images_in_directory(image_urls, file_name):
     for image_number, image_url in enumerate(image_urls):
         extension_file = get_file_extension(image_url)
         name = f'{file_name}_{image_number}.{extension_file}'
-        path_where_to_save = current_dir_img / name
+        path_where_to_save = Path(current_dir_img).joinpath(name)
         download_image(image_url, path_where_to_save)
 
 

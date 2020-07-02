@@ -3,6 +3,7 @@ import fetch_spacex
 import fetch_hubble
 import images
 import upload_to_instagram
+from pathlib import Path
 
 
 def main():
@@ -23,13 +24,18 @@ def main():
         image_name = image_data['image_name']
         url = image_data['url']
         extension_image = images.get_file_extension(url)
-        name = f'{image_name}_{image_numerator}.{extension_image}'
-        full_name = current_images_directory / name
+        name = f'{image_name}_{image_numerator}{extension_image}'
+        full_name = Path(current_images_directory).joinpath(name)
         images.download_image(url, full_name)
 
     upload_to_instagram.prepare_images_for_publicatioin()
-    upload_to_instagram.upload_pictures_to_instagram(args.u, args.p, args.proxy)
+    username = args.u
+    password = args.p
+    proxy = args.proxy
+    upload_to_instagram.upload_pictures_to_instagram(username, password, proxy)
 
 
 if __name__ == '__main__':
     main()
+
+

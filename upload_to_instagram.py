@@ -1,6 +1,5 @@
-import glob
-import os
 import images
+from pathlib import Path
 from instabot import Bot
 from PIL import Image
 
@@ -8,40 +7,43 @@ from PIL import Image
 def upload_pictures_to_instagram(instagram_username, instagram_password, instagram_proxy):
     bot = Bot()
     bot.login(username=instagram_username, password=instagram_password, proxy=instagram_proxy)
-    folder_path = images.get_directory_images()
-    pics = glob.glob(str(folder_path)+'/*.jpg')
-    pics = sorted(pics)
-    for pic in pics:
+    images = Path.cwd().joinpath('images')
+    currentPattern = '*.jpg'
+    for image in images.glob(currentPattern):
         try:
-            bot.upload_photo(pic)
+            bot.upload_photo(image)
             if bot.api.last_response.status_code != 200:
                 print(bot.api.last_response)
         except Exception as e:
             print(str(e))
 
-# Instagram requires a photo only with the extension jpg
+
 def prepare_images_for_publicatioin():
-    photo_extensions = ('jpg', 'gif', 'jpeg', 'png')
+    image_extensions = ('.jpg', '.gif', '.jpeg', '.png')
     max_width_img = 1080
     max_height_img = 1080
-    extension_file = 'jpg'
-    current_dir_images = images.get_directory_images()
-    for dirpath, dirs, files in os.walk(current_dir_images):
-        for file in files:
-            extensions_current_file = images.get_file_extension(file)
-            if extensions_current_file not in photo_extensions:
-                continue
+    extension_file = '.jpg'
+    images_dir = images.get_directory_images()
+    for path in images_dir.glob('*.*'):
+        image_path = Path(path)
+        image_extension = image_path.suffix
+        if image_extension not in image_extensions:
+            continue
 
-            if extensions_current_file == 'jpg':
-                continue
+        if image_extension == extension_file:
+            continue
 
-            full_path_file = f'{dirpath}/{file}'
-            image = Image.open(full_path_file)
-            width, height = image.size
-            mode = image.mode
-            if width > max_width_img and height > max_height_img:
-                image.thumbnail((max_width_img, max_height_img))
+        image = Image.open(path)
+        width, height = image.size
+        if width < max_width_img and height < max_height_img:
+            continue
 
-            name_file = file.split('.')[0]
-            image = image.convert('RGB')
-            image.save(f'{dirpath}/{name_file}.{extension_file}')
+        image.thumbnail((max_width_img, max_height_img))
+        image = image.convert('RGB')
+        image_name = image_path.name
+        parent = image_path.parent
+        image.save(Path(parent).joinpath(f'{image_name}{image_extension}'))
+
+
+
+
