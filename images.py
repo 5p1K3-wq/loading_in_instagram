@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 def get_file_extension(image_url):
-    #return image_url.split('.')[-1]
     return Path(image_url).suffix
 
 
